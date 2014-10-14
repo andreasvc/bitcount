@@ -1,3 +1,9 @@
+/* Fast cross-platform bit counting using intrinsic functions
+ *
+ * This code is based on https://github.com/Noctune/bitcount
+ * Adapted for 64-bit integers instead of 32 bits.
+ */
+
 #ifndef BITCOUNT_H_
 #define BITCOUNT_H_
 
@@ -25,21 +31,21 @@ extern "C" {
 #endif
 
 #include <limits.h>
-#define BITCOUNT_BITS (sizeof(unsigned int) * CHAR_BIT)
+#include <stdint.h>
+#define BITCOUNT_BITS (sizeof(uint64_t) * CHAR_BIT)
 
 /* General implementations for systems without intrinsics */
-unsigned int bit_clz_general(unsigned int);
-unsigned int bit_ctz_general(unsigned int);
-unsigned int bit_popcount_general(unsigned int);
+unsigned int bit_clz_general(uint64_t);
+unsigned int bit_ctz_general(uint64_t);
+unsigned int bit_popcount_general(uint64_t);
 
 /* Returns the number of leading 0-bits in x, starting at the most significant
    bit position. If v is 0, the result is undefined. */
-BITCOUNT_INLINE unsigned int bit_clz(unsigned int v)
-{
+BITCOUNT_INLINE unsigned int bit_clz(uint64_t v) {
 	#if defined(BITCOUNT_GCC)
-	return __builtin_clz(v);
+	return __builtin_clzl(v);
 	#elif defined(BITCOUNT_VS_X86)
-	unsigned long result;
+	uint64_t result;
 	_BitScanReverse(&result, v);
 	return BITCOUNT_BITS - 1 - result;
 	#else
@@ -49,12 +55,11 @@ BITCOUNT_INLINE unsigned int bit_clz(unsigned int v)
 
 /* Returns the number of trailing 0-bits in x, starting at the least significant
    bit position. If v is 0, the result is undefined. */
-BITCOUNT_INLINE unsigned int bit_ctz(unsigned int v)
-{
+BITCOUNT_INLINE unsigned int bit_ctz(uint64_t v) {
 	#if defined(BITCOUNT_GCC)
-	return __builtin_ctz(v);
+	return __builtin_ctzl(v);
 	#elif defined(BITCOUNT_VS_X86)
-	unsigned long result;
+	uint64_t result;
 	_BitScanForward(&result, v);
 	return result;
 	#else
@@ -63,10 +68,9 @@ BITCOUNT_INLINE unsigned int bit_ctz(unsigned int v)
 }
 
 /* Returns the number of 1-bits in v. */
-BITCOUNT_INLINE unsigned int bit_popcount(unsigned int v)
-{
+BITCOUNT_INLINE unsigned int bit_popcount(uint64_t v) {
 	#if defined(BITCOUNT_GCC)
-	return __builtin_popcount(v);
+	return __builtin_popcountl(v);
 	#elif defined(BITCOUNT_VS_X86)
 	return __popcnt(v);
 	#else

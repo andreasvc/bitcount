@@ -19,17 +19,17 @@ int main(int argc, char **argv)
 	TEST(ctz, 3, 0);
 	TEST(ctz, 0x80000000, 31);
 	TEST(ctz, 0x1000, 12);
-	TEST(ctz, UINT_MAX, 0);
-	TEST(clz, 1, 31);
-	TEST(clz, 4, 29);
-	TEST(clz, 0x80000000, 0);
-	TEST(clz, 0x1000, 19);
-	TEST(clz, UINT_MAX, 0);
+	TEST(ctz, UINT64_MAX, 0);
+	TEST(clz, 1, BITCOUNT_BITS - 1);
+	TEST(clz, 4, BITCOUNT_BITS - 3);
+	TEST(clz, 0x80000000, BITCOUNT_BITS - 32);
+	TEST(clz, 0x1000, BITCOUNT_BITS - 13);
+	TEST(clz, UINT64_MAX, 0);
 	TEST(popcount, 0x1, 1);
 	TEST(popcount, 0x10, 1);
 	TEST(popcount, 0x101001, 3);
 	TEST(popcount, 3, 2);
-	TEST(popcount, UINT_MAX, BITCOUNT_BITS);
+	TEST(popcount, UINT64_MAX, BITCOUNT_BITS);
 	TEST(popcount, 0, 0);
 	return status;
 }
