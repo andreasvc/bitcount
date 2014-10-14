@@ -73,7 +73,7 @@ unsigned int bit_popcount_general(uint64_t v) {
 	// see http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
     v -= ((v >> 1) & 0x5555555555555555);
     v = (v & 0x3333333333333333) + ((v >> 2) & 0x3333333333333333);
-    return ((v + (v >> 4) & 0xF0F0F0F0F0F0F0F) * 0x101010101010101) >> 56;
+    return (((v + (v >> 4)) & 0xF0F0F0F0F0F0F0F) * 0x101010101010101) >> 56;
 }
 
 #ifdef __cplusplus

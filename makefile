@@ -2,6 +2,9 @@ tests: tests.out
 	./tests.out
 
 tests.out: bitcount.c bitcount.h tests.c
-	gcc bitcount.c tests.c -o tests.out
+	gcc bitcount.c -Wall tests.c -o tests.out
 
-.PHONY: tests
+clean:
+	rm -f tests.out
+
+.PHONY: tests clean
